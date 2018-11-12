@@ -601,6 +601,11 @@ class StockPicking(models.Model):
             # validate stock.picking
             picking.action_done()  # old do_transfer
 
+        self.env.ref('udes_stock.picking_update').with_context(
+            active_model=picking._name,
+            active_ids=picking.ids,
+        ).run()        
+
     def _requires_backorder(self, mls):
         """ Checks if a backorder is required
             by checking if all move.lines
