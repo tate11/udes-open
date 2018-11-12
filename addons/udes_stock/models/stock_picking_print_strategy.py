@@ -23,3 +23,11 @@ class PrintStrategy(models.Model):
         return self.search([
             ('picking_type_id', '=', picking.picking_type_id.id),
         ])
+
+    @api.multi
+    def records(self, picking, report=None):
+        '''Return records to print for `report`.'''
+        picking.ensure_one()
+        if report and report.model == 'sale.order':
+            return picking.mapped('move_lines.sale_line_id.order_id')
+        return picking
